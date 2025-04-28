@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.lazyload@1.9.7/jquery.lazyload.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@7.3.1/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@7.3.1/swiper-bundle.min.css">
+    <link rel="stylesheet" href="./main.css">
+    <style>
+        /* 弹窗样式 */
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            z-index: 1000;
+            border-radius: 10px; /* 添加圆角 */
+            max-height: 80vh; /* 设置最大高度 */
+            overflow-y: auto; /* 内容超出时显示滚动条 */
+        }
+
+        #popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        #close-popup {
+            background-color: #007BFF; /* 蓝色背景 */
+            color: white;
+            border: none;
+            padding: 10px 20px; /* 增大按钮尺寸 */
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #close-popup:hover {
+            background-color: #0056b3;
+        }
+
+        #popup img {
+            width: 100%;
+            margin-bottom: 10px;
+            border-radius: 5px; /* 添加圆角 */
+        }
+
+        #view-more {
+            display: inline-block;
+            background-color: #007BFF; /* 蓝色背景 */
+            color: white;
+            border: none;
+            padding: 15px 30px; /* 增大按钮尺寸 */
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+
+        #view-more:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div id="conch-header" class="conch-header">
+    <div class="conch-headwrap conch-hasconch">
+        <div class="container">
+            <h1 class="conch-logo">
+                <span>短剧好看影院-在线短剧-抖音短剧-全集短剧-免费短剧</span>
+                <a class="hl-logo hl-logo-black"
+                   style="background-image: url(/template/conch/asset/img/logo_black.png);" href="/"></a>
+                <a class="hl-logo hl-logo-white"
+                   style="background-image: url(/template/conch/asset/img/logo_black.png);" href="/"></a>
+            </h1>
+            <div class="conch-list conch-content">
+                <ul class="hl-list hl-text-muted clearfix">
+                    <li class="hl-list-font hl-list-history hl-alert-items hl-full-items">
+                        <a href="javascript:void(0)" class="history hl-full-op" title="观看记录"><i
+                                class="iconfont hl-icon-shijian"></i></a>
+                        <div class="hl-history-box hl-alert-box hl-full-alert hl-full-x100 hl-bg-site hl-fadeIn-sm">
+                            <div class="hl-hy-warp hl-row-box">
+                                <div class="hl-hy-title hl-full-head">
+                                    <a class="hl-close-full hl-hide-sm hl-text-muted" href="javascript:void(0)"><i
+                                            class="iconfont hl-icon-cuo"></i></a>
+                                    <span>观看记录</span>
+                                </div>
+                                <div class="hl-hy-list hl-public-box hl-sm-box">
+                                    <ul class="hl-public-vod row clearfix" id="hl-history"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="conch-nav">
+                <div class="hl-nav-wrap hl-navswiper">
+                    <ul class="hl-nav hl-text-site swiper-wrapper clearfix">
+                        <li class="hl-nav-item hl-slide-swiper hl-author-qq-362695000">
+                            <a href="/">首页</a>
+                        </li>
+                        <li class="hl-nav-item hl-slide-swiper">
+                            <a href="?/vodtype/jingxuanduanju.html" class="hl-text-conch active">精选短剧</a>
+                        </li>
+                        <li class="hl-nav-item hl-slide-swiper">
+                            <a href="?/vodtype/dushi.html">都市</a>
+                        </li>
+                        <li class="hl-nav-item hl-slide-swiper">
+                            <a href="?/vodtype/chuanyue.html">穿越</a>
+                        </li>
+                        <li class="hl-nav-item hl-slide-swiper">
+                            <a href="?/vodtype/gudai.html">古代</a>
+                        </li>
+                        <li class="hl-nav-item hl-slide-swiper">
+                            <a href="?/vodtype/fuliduanju.html">福利短剧</a>
+                        </li>
+                        <li class="hl-nav-item hl-slide-swiper">
+                            <a href="?/index.php/gbook/index.html">留言</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="hl-nav-more">
+                    <i class="hl-mbg hl-hide-sm"></i>
+                    <a class="hl-text-site hl-open-menu" href="javascript:;"><span class="hl-hidden-xs">全部</span><i
+                            class="iconfont hl-icon-caidan"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="conch-menus hl-bg-site hl-tran5">
+        <div class="conch-ms-header">
+            <div class="conch-logo">
+                <a class="hl-logo hl-logo-black"
+                   style="background-image: url(/template/conch/asset/img/logo_black.png);" href="/"></a>
+                <a class="hl-logo hl-logo-white"
+                   style="background-image: url(/template/conch/asset/img/logo_black.png);" href="/"></a>
+            </div>
+            <a class="conch-ms-close hl-text-muted" href="javascript:;"><i class="iconfont hl-icon-cuo"></i></a>
+        </div>
+        <div class="conch-scrollbar">
+            <div class="swiper-wrapper">
+                <div class="conch-mswrap swiper-slide">
+                    <ul class="hl-menus clearfix">
+                        <li class="hl-menus-item">
+                            <a href="/"><i class="iconfont hl-icon-shouye"></i><span>首页</span></a>
+                        </li>
+                        <li class="hl-menus-item">
+                            <a href="?/vodtype/jingxuanduanju.html" class="active"><i
+                                    class="iconfont hl-icon-shipinku"></i><span>精选短剧</span><em>19556</em> </a>
+                        </li>
+                        <li class="hl-menus-item">
+                            <a href="?/vodtype/dushi.html"><i class="iconfont hl-icon-shipinku"></i><span>都市</span><em>5297</em>
+                            </a>
+                        </li>
+                        <li class="hl-menus-item">
+                            <a href="?/vodtype/chuanyue.html"><i
+                                    class="iconfont hl-icon-shipinku"></i><span>穿越</span><em>1775</em> </a>
+                        </li>
+                        <li class="hl-menus-item">
+                            <a href="?/vodtype/gudai.html"><i class="iconfont hl-icon-shipinku"></i><span>古代</span><em>1195</em>
+                            </a>
+                        </li>
+                        <li class="hl-menus-item">
+                            <a href="?/vodtype/fuliduanju.html"><i
+                                    class="iconfont hl-icon-zuichun"></i><span>福利短剧</span><em>7808</em> </a>
+                        </li>
+                        <li class="hl-menus-item">
+                            <a href="?/index.php/gbook/index.html"><i
+                                    class="iconfont hl-icon-liuyan"></i><span>留言</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="swiper-scrollbar"></div>
+        </div>
+        <div class="conch-ms-overlay"></div>
+    </div>
+</div>
+<div id="conch-content" class="conch-content">
+    <div class="conch-ctwrap">
+        <div class="container">
+            <div class="hl-row-box">
+                <div class="hl-rb-vod clearfix">
+
+                    <div class="row">
+                        <div class="hl-list-wrap">
+                            <ul class="hl-vod-list clearfix" id="ajax_html"></ul>
+                            <ul class="hl-page-wrap hl-text-center cleafix" id="pagination"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="conch-footer" class="conch-footer">
+    <div class="conch-footwrap  hl-bg-subs hl-footnav-show">
+        <div class="container">
+            <div class="hl-footwrap-item">
+                <div class="hl-foot-extra">
+                    <ul class="hl-fe-list clearfix">
+                        <li class="hl-mqr-item hl-hidden-xs">
+                            <a href="javascript:void(0)"><i class="iconfont hl-icon-shouji"></i></a>
+                            <div class="hl-alert-box hl-bg-site hl-fadeIn">
+                                <div class="hl-mqr-wrap">
+                                    <div class="hl-cans hl-hide"></div>
+                                    <p class="hl-qrcode"></p>
+                                    <p class="hl-text-muted">扫一扫用手机访问</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="hl-color-item">
+                            <a id="black" href="javascript:void(0)"><i
+                                    class="iconfont hl-icon-yueliang"></i><span>深色模式</span></a></li>
+                        <li class="hl-gbook-item">
+                            <a href="?/index.php/gbook/index.html"><i
+                                    class="iconfont hl-icon-liuyan"></i><span>留言反馈</span></a>
+                        </li>
+                        <li class="hl-back-item">
+                            <a class="hl-back-top" href="javascript:scroll(0,0)"><i
+                                    class="iconfont hl-icon-jiantoushang"></i><span>返回顶部</span></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="hl-col-sm-8 hl-col-xs-12">
+                        <div class="hl-foot-text hl-text-muted">
+                            <p>
+                                本站只提供WEB页面服务，本站不存储、不制作任何视频，不承担任何由于内容的合法性及健康性所引起的争议和法律责任。</p>
+                            <p>若本站收录内容侵犯了您的权益，请附说明联系邮箱，本站将第一时间处理。</p>
+                            <p>联系邮箱：&nbsp;&nbsp;<span class="hl-hide">统计代码</span></p>
+                        </div>
+                        <div class="hl-map-nav hl-text-site hl-hidden-xs">
+                            <a href="?/rss/index.xml" target="_blank">RSS订阅</a>
+                            <span>—</span>
+                            <a href="?/rss/baidu.xml" target="_blank">百度蜘蛛</a>
+                            <span>—</span>
+                            <a href="?/rss/sm.xml" target="_blank">神马爬虫</a>
+                            <span>—</span>
+                            <a href="?/rss/sogou.xml" target="_blank">搜狗蜘蛛</a>
+                            <span>—</span>
+                            <a href="?/rss/so.xml" target="_blank">奇虎地图</a>
+                            <span>—</span>
+                            <a href="?/rss/google.xml" target="_blank">谷歌地图</a>
+                            <span class="hl-hidden-sm">—</span>
+                            <a href="?/rss/bing.xml" target="_blank" class="hl-hidden-sm">必应爬虫</a>
+                        </div>
+                    </div>
+                    <div class="hl-col-sm-4 hl-col-xs-12">
+                        <div class="hl-foot-logo">
+                            <a class="hl-logo hl-bright-0"
+                               style="background-image: url(/template/conch/asset/img/logo_black.png);" href="/"></a>
+                        </div>
+                        <div class="hl-foot-copy hl-text-muted">
+                            <p>&copy;&nbsp;2025&nbsp;抖音短剧免费在线看&nbsp;All rights reservd.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="hl-foot-nav hl-bg-site hl-hide-sm">
+                    <ul class="hl-fn-list">
+                        <li class="hl-fn-item">
+                            <a href="/">
+                                <i class="iconfont hl-icon-shouye"></i> <span class="hl-fn-font">首页</span>
+                            </a>
+                        </li>
+                        <li class="hl-fn-item">
+                            <a href="?/vodtype/dushi.html">
+                                <i class="iconfont hl-icon-shipinku"></i> <span class="hl-fn-font">都市</span>
+                            </a>
+                        </li>
+                        <li class="hl-fn-item">
+                            <a href="?/vodtype/chuanyue.html">
+                                <i class="iconfont hl-icon-shipinku"></i> <span class="hl-fn-font">穿越</span>
+                            </a>
+                        </li>
+                        <li class="hl-fn-item">
+                            <a href="?/vodtype/fuliduanju.html">
+                                <i class="iconfont hl-icon-zuichun"></i> <span class="hl-fn-font">福利短剧</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<!-- 弹窗 HTML 结构 -->
+<div id="popup-overlay"></div>
+<div id="popup">
+    <img id="popup-image" src="" alt="封面图片"> <!-- 添加封面图片 -->
+    <h2 id="popup-title"></h2>
+    <p id="popup-content"></p>
+    <p id="popup-score"></p>
+    <button id="close-popup">关闭</button>
+    <a id="view-more" href="https://pan.quark.cn/s/1f00313ecf14" target="_blank">去夸克网盘查看更多</a>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    var page = 1;
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('page')) {
+        page = params.get('page');
+    }
+    page = parseInt(page);
+    // 模拟总页数和当前页码
+    var totalPages = 577;
+    var currentPage =  page;
+
+    // 渲染分页导航
+    function renderPagination(totalPages, currentPage) {
+        var pagination = $('#pagination');
+        pagination.empty();
+
+        // 首页和上一页按钮
+        if (currentPage > 1) {
+            pagination.append(`<li class="hl-hide-sm"><a href="?page=1"><i class="iconfont hl-icon-jiantoushou"></i></a></li>`);
+            pagination.append(`<li><a href="?page=${currentPage - 1}"><span class="hl-hide-sm"><i class="iconfont hl-icon-jiantouzuo"></i></span><span class="hl-hidden-xs">上一页</span></a></li>`);
+        } else {
+            pagination.append(`<li class="hl-hide-sm"><a href="javascript:;" class="hl-disad"><i class="iconfont hl-icon-jiantoushou"></i></a></li>`);
+            pagination.append(`<li><a href="javascript:;" class="hl-disad"><span class="hl-hide-sm"><i class="iconfont hl-icon-jiantouzuo"></i></span><span class="hl-hidden-xs">上一页</span></a></li>`);
+        }
+
+        // 页码按钮
+        if (totalPages <= 5) {
+            for (var i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    pagination.append(`<li class="hl-hidden-xs"><a href="javascript:;" class="active">${i}</a></li>`);
+                } else {
+                    pagination.append(`<li class="hl-hidden-xs"><a href="?page=${i}">${i}</a></li>`);
+                }
+            }
+        } else {
+            if (currentPage <= 3) {
+                for (var i = 1; i <= 5; i++) {
+                    if (i === currentPage) {
+                        pagination.append(`<li class="hl-hidden-xs"><a href="javascript:;" class="active">${i}</a></li>`);
+                    } else {
+                        pagination.append(`<li class="hl-hidden-xs"><a href="?page=${i}">${i}</a></li>`);
+                    }
+                }
+                pagination.append(`<li class="hl-hidden-xs hl-disad"><a class="hl-page-dot" href="javascript:;"><span>...</span></a></li>`);
+            } else if (currentPage >= totalPages - 2) {
+                pagination.append(`<li class="hl-hidden-xs hl-disad"><a class="hl-page-dot" href="javascript:;"><span>...</span></a></li>`);
+                for (var i = totalPages - 4; i <= totalPages; i++) {
+                    if (i === currentPage) {
+                        pagination.append(`<li class="hl-hidden-xs"><a href="javascript:;" class="active">${i}</a></li>`);
+                    } else {
+                        pagination.append(`<li class="hl-hidden-xs"><a href="?page=${i}">${i}</a></li>`);
+                    }
+                }
+            } else {
+                pagination.append(`<li class="hl-hidden-xs hl-disad"><a class="hl-page-dot" href="javascript:;"><span>...</span></a></li>`);
+                for (var i = currentPage - 2; i <= currentPage + 2; i++) {
+                    if (i === currentPage) {
+                        pagination.append(`<li class="hl-hidden-xs"><a href="javascript:;" class="active">${i}</a></li>`);
+                    } else {
+                        pagination.append(`<li class="hl-hidden-xs"><a href="?page=${i}">${i}</a></li>`);
+                    }
+                }
+                pagination.append(`<li class="hl-hidden-xs hl-disad"><a class="hl-page-dot" href="javascript:;"><span>...</span></a></li>`);
+            }
+        }
+
+        // 当前页码提示
+        pagination.append(`<li class="hl-page-tips hl-hide-sm"><a href="javascript:;">${currentPage}&nbsp;/&nbsp;${totalPages}</a></li>`);
+
+        // 下一页和尾页按钮
+        if (currentPage < totalPages) {
+            pagination.append(`<li><a href="?page=${currentPage + 1}"><span class="hl-hide-sm"><i class="iconfont hl-icon-jiantouyou"></i></span><span class="hl-hidden-xs">下一页</span></a></li>`);
+            pagination.append(`<li class="hl-hide-sm"><a href="?page=${totalPages}"><i class="iconfont hl-icon-jiantouwei"></i></a></li>`);
+        } else {
+            pagination.append(`<li><a href="javascript:;" class="hl-disad"><span class="hl-hide-sm"><i class="iconfont hl-icon-jiantouyou"></i></span><span class="hl-hidden-xs">下一页</span></a></li>`);
+            pagination.append(`<li class="hl-hide-sm"><a href="javascript:;" class="hl-disad"><i class="iconfont hl-icon-jiantouwei"></i></a></li>`);
+        }
+    }
+
+    // 调用渲染函数
+    renderPagination(totalPages, currentPage);
+
+    var url = 'https://api.meiyoufan.com/test/data/'+page+'.json';
+    get_ajax_html(url);
+
+    function get_ajax_html(url) {
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                var html = '';
+                for (var i = 0; i < data.length; i++){
+                    html +='<li class="hl-list-item hl-col-xs-4 hl-col-sm-3 hl-col-md-20w hl-col-lg-2">';
+                    var img_url = 'https://duanjuhk.com' + data[i]['img'];
+                    var p_i_j = page + '-' + (i + 1) + '-' + (i + 1);
+                    html +='<img data-src="' + p_i_j + '" class="hl-lazy" src="' + img_url +'" style="display:none;" onerror="errorImg(this)">';
+                    html +='<a class="hl-item-thumb hl-lazy" href="javascript:void(0);" title="' + data[i]['title'] + '" data-img="' + img_url + '" style="background-image:url(' +img_url+');" data-url="' + data[i]['url'] + '" data-title="' + data[i]['title'] + '" data-content="' + data[i]['content'] + '" data-score="' + data[i]['score'] + '">';
+                    html +='<div class="hl-pic-icon hl-hidden-xs"><i class="iconfont hl-icon-bofang-fill"></i></div>';
+                    html +='<div class="hl-pic-tag"> </div>';
+                    html +='<div class="hl-pic-text"> <span class="hl-lc-1 remarks">' + data[i]['content'] + '</span> </div> </a>';
+                    html +='<div class="hl-item-text"> <div class="hl-item-title hl-text-site hl-lc-1">';
+                    html +='<a href="javascript:void(0);">' + data[i]['title'] + '</a></div>';
+                    html +=' <div class="hl-item-sub hl-text-muted hl-lc-1"> <span class="hl-text-conch score">' + parseFloat(data[i]['score']) + '</span>  </div> </div> </li>';
+                }
+                $('#ajax_html').html(html);
+                // 为每个短剧项添加点击事件
+                $('.hl-item-thumb, .hl-item-title a').on('click', function() {
+                    var title = $(this).data('title');
+                    var content = $(this).data('content');
+                    var score = $(this).data('score');
+                    var url = $(this).data('url');
+                    var img = $(this).data('img');
+
+                    $('#popup-title').text(title);
+                    $('#popup-content').text(content);
+                    $('#popup-score').text('评分: ' + score);
+                    // $('#view-more').attr('href', url);
+                    $('#popup-image').attr('src', img); // 设置封面图片
+
+                    $('#popup-overlay').show();
+                    $('#popup').show();
+                });
+
+            },
+            error: function (data) {
+                // window.location.href='/';
+            }
+        });
+    }
+    function errorImg(obj){
+        var p_i_j = $(obj).attr('data-src');
+        var url = './cache/water/img_' + p_i_j + '.jpg';
+        console.log(p_i_j,url);
+        $(obj).next().css("background-image","url(" + url + ")");
+    }
+    // 关闭弹窗事件
+    $('#close-popup').on('click', function() {
+        $('#popup-overlay').hide();
+        $('#popup').hide();
+    });
+
+    // 点击遮罩层关闭弹窗
+    $('#popup-overlay').on('click', function() {
+        $('#popup-overlay').hide();
+        $('#popup').hide();
+    });
+    // 根据屏幕大小判断pc还是移动端
+    var isMobile = false;
+    if (navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)) {
+        isMobile = true;
+    }
+    if (isMobile) {
+        $('#popup').css('width', '100%');
+        $('#popup h2').css('font-size', '3.325rem');
+        $('#popup p').css('font-size', '2.0rem');
+        $('#popup-image').css('width', '100%');
+        $('#popup-image').css('height', 'auto');
+        $('#popup button').css('font-size', '2.4rem');
+        $('#popup button').css('padding', '2.4rem 2.4rem');
+        $('#popup a').css('padding', '2.4rem 2.4rem');
+        $('#popup a').css('font-size', '2.4rem');
+    }
+</script>
+</body>
+</html>
