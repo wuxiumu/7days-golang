@@ -1,4 +1,20 @@
 # 函数
+普通，匿名，闭包
+
+```go
+import "fmt"
+
+func add(a,b int,c float32) (int,error){
+	return a+b,nil
+}
+func main() {
+	// 定义普通函数
+	a:=1
+	b:=2
+	sum,_:=add(a,b,3.13)
+	fmt.Println(sum)
+}
+```
 1.变量
 
 2.闭包
