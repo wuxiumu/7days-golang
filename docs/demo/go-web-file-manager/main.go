@@ -65,7 +65,7 @@ func loadConfig(path string) error {
 	if err != nil {
 		// 使用默认配置
 		config = Config{
-			RootPath: "./files",
+			RootPath: "files",
 			Port:     8080,
 		}
 		return nil
@@ -80,9 +80,6 @@ func loadConfig(path string) error {
 func listFiles(w http.ResponseWriter, r *http.Request) {
 	relativePath := strings.TrimPrefix(r.URL.Path, "/api/list")
 	absolutePath := filepath.Join(config.RootPath, filepath.Clean(relativePath))
-
-    //打印 absolutePath, config.RootPath
-    fmt.Println(absolutePath, config.RootPath)
 
 	// 安全检查
 	if !strings.HasPrefix(absolutePath, config.RootPath) {

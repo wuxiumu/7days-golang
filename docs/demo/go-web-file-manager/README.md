@@ -3,7 +3,7 @@
 现在时间：2025-05-21 17:32:22
 
 下面是一个使用Go实现的Web文件管理器，支持浏览目录、查看文件内容、上传和下载文件等功能。
-
+![图片](https://archive.biliimg.com/bfs/archive/dd62598c0951a1bcdf46443e36c68bff9e87a814.png)
 
 这个Web文件管理器具有以下功能：
 
@@ -24,9 +24,18 @@
 配置文件示例（config.json）：
 ```json
 {
-    "rootPath": "./files",
+    "rootPath": "files",
     "port": 8080
 }
 ```
 
+程序目录结构：
+```
+├── config.json
+├── main.go
+├── README.md
+├── files
+├── static
+│   ├── index.html
+```
 注意：程序默认会在当前目录下创建一个名为"files"的目录作为文件管理的根目录。
